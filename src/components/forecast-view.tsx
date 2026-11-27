@@ -19,7 +19,7 @@ export const ForecastView = () => {
     <main class="view" aria-busy={status().isFetching ? 'true' : 'false'}>
       <Switch>
         <Match when={!city()}>
-          <p class="card empty">Выберите город, чтобы увидеть прогноз.</p>
+          <p class="card empty">Choose a city to see the forecast.</p>
         </Match>
         <Match when={ready()}>
           <current-weather></current-weather>
@@ -30,29 +30,29 @@ export const ForecastView = () => {
           </div>
           <div class="refresh">
             <Show when={status().isFetching}>
-              <span class="muted">Обновляю…</span>
+              <span class="muted">Updating…</span>
             </Show>
             <Show when={status().isError}>
-              <span class="muted error">Не удалось обновить, показаны сохранённые данные</span>
+              <span class="muted error">Could not update, showing saved data</span>
             </Show>
             <button type="button" class="pill" onClick={refresh}>
-              ↻ Обновить
+              ↻ Refresh
             </button>
           </div>
         </Match>
         <Match when={status().isError}>
           <div class="card empty">
             <p>
-              Не удалось загрузить прогноз
+              Could not load the forecast
               {status().httpStatus ? ` (HTTP ${status().httpStatus})` : ''}.
             </p>
             <button type="button" class="pill" onClick={refresh}>
-              Повторить
+              Retry
             </button>
           </div>
         </Match>
         <Match when={true}>
-          <div class="card skeleton" aria-label="Загрузка прогноза"></div>
+          <div class="card skeleton" aria-label="Loading forecast"></div>
           <div class="card skeleton short"></div>
         </Match>
       </Switch>

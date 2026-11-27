@@ -59,7 +59,7 @@ describe('weather store', () => {
           const name = url.searchParams.get('name');
           return name === 'zzz'
             ? json({ generationtime_ms: 1 })
-            : json({ results: [{ id: 1, name: 'Берлин', admin1: 'Берлин', country: 'Германия', latitude: 52.5, longitude: 13.4 }] });
+            : json({ results: [{ id: 1, name: 'Berlin', admin1: 'Berlin', country: 'Germany', latitude: 52.5, longitude: 13.4 }] });
         }
         if (url.hostname.startsWith('air-quality')) return json({ current: { european_aqi: 10, pm2_5: 1, pm10: 2 } });
         const lat = Number(url.searchParams.get('latitude'));
@@ -109,9 +109,9 @@ describe('weather store', () => {
     await settle(DEBOUNCE);
     expect(store.status('cities').status).toBe('empty');
 
-    store.set('query', 'берлин');
+    store.set('query', 'berlin');
     await settle(DEBOUNCE);
-    expect(store.get((s) => s.cities)?.[0]).toMatchObject({ name: 'Берлин', region: undefined });
+    expect(store.get((s) => s.cities)?.[0]).toMatchObject({ name: 'Berlin', region: undefined });
     stop();
   });
 

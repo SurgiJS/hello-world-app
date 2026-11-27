@@ -10,21 +10,21 @@ describe('units', () => {
   });
 
   it('formats wind', () => {
-    expect(formatWind(10, 'metric')).toBe('10 км/ч');
-    expect(formatWind(10, 'imperial')).toBe('6 миль/ч');
+    expect(formatWind(10, 'metric')).toBe('10 km/h');
+    expect(formatWind(10, 'imperial')).toBe('6 mph');
   });
 
   it('maps degrees to a compass point', () => {
-    expect(compass(0)).toBe('С');
-    expect(compass(90)).toBe('В');
-    expect(compass(359)).toBe('С');
-    expect(compass(-90)).toBe('З');
+    expect(compass(0)).toBe('N');
+    expect(compass(90)).toBe('E');
+    expect(compass(359)).toBe('N');
+    expect(compass(-90)).toBe('W');
   });
 });
 
 describe('conditions', () => {
   it('falls back for unknown codes and shows a moon at night', () => {
-    expect(condition(999).label).toBe('Нет данных');
+    expect(condition(999).label).toBe('No data');
     expect(condition(0, false).icon).toBe('🌙');
     expect(condition(0, true).icon).toBe('☀️');
   });

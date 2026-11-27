@@ -17,12 +17,12 @@ export const HourlyChart = () => {
 
   return (
     <section class="card">
-      <h3 class="card-title">Ближайшие 24 часа</h3>
+      <h3 class="card-title">Next 24 hours</h3>
       <svg
         class="chart"
         viewBox={`0 0 ${CHART.width} ${CHART.height}`}
         role="img"
-        aria-label="График температуры на 24 часа"
+        aria-label="Temperature chart for the next 24 hours"
       >
         <For each={geo().points} by={(p, i) => `${i}:${p.rain}`}>
           {(p) => (

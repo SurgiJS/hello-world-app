@@ -1,27 +1,27 @@
-# Погода
+# Weather
 
-Погодное приложение на [SurgiJS](https://github.com/SurgiJS/surgijs) (`@surgijs/core`, `@surgijs/compiler`, `@surgijs/store`) и публичном API [Open-Meteo](https://open-meteo.com/). Чистый SPA без SSR и без собственного бэкенда, деплой на GitHub Pages.
+A weather app built with [SurgiJS](https://github.com/SurgiJS/surgijs) (`@surgijs/core`, `@surgijs/compiler`, `@surgijs/store`) and the public [Open-Meteo](https://open-meteo.com/) API. A plain SPA: no SSR and no backend of its own. It is deployed to GitHub Pages.
 
-## Возможности
+## Features
 
-- поиск города (geocoding API), геолокация, избранные города;
-- текущая погода, график на 24 часа, прогноз на 7 дней, качество воздуха;
-- переключение °C / °F, тёмная тема по системным настройкам;
-- состояние (город, избранное, единицы) хранится в `localStorage` через `persist`.
+- city search (geocoding API), geolocation and favorite cities;
+- current weather, a 24-hour chart, a 7-day forecast and air quality;
+- °C / °F switch and a dark theme that follows the system setting;
+- the city, favorites and units are kept in `localStorage` through `persist`.
 
-## Как устроено
+## How it works
 
-Всё состояние живёт в одном `createStore` (`src/lib/store.ts`):
+All state lives in one `createStore` (`src/lib/store.ts`):
 
-| Поле | Тип | Зависит от |
+| Field | Kind | Depends on |
 | --- | --- | --- |
 | `query`, `city`, `favorites`, `units` | sync | |
 | `cities` | `remote` | `query` |
 | `forecast`, `air` | `remote` | `city` |
 
-Компоненты (`src/components`) это Web Components на JSX, которые читают store через `fromStore` / `fromStatus` из `@surgijs/store/core`. Типизированные `deps` дает `createRemote`, дебаунс поиска задан в `remote({ debounce })`, сохранение в `localStorage` делает `persist`.
+Components (`src/components`) are Web Components written in JSX. They read the store through `fromStore` / `fromStatus` from `@surgijs/store/core`. `createRemote` types the `deps`, search debouncing is set with `remote({ debounce })`, and `persist` saves state to `localStorage`.
 
-## Разработка
+## Development
 
 ```bash
 npm install
@@ -30,7 +30,11 @@ npm test        # vitest
 npm run build   # tsc + vite build -> dist/
 ```
 
-## Деплой
+## Deployment
 
-Workflow `.github/workflows/deploy.yml` собирает и публикует `dist/` на GitHub Pages при пуше в `main`.
-В настройках репозитория: Settings, Pages, Source: **GitHub Actions**.
+The workflow `.github/workflows/deploy.yml` builds the app and publishes `dist/` to GitHub Pages on every push to `main`.
+In the repository settings choose Settings, Pages, Source: **GitHub Actions**.
+
+## Data
+
+Weather and air quality data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0).
