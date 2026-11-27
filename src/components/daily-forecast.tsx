@@ -22,7 +22,7 @@ export const DailyForecast = () => {
 
   return (
     <section class="card">
-      <h3 class="card-title">Неделя</h3>
+      <h3 class="card-title">7-day forecast</h3>
       <ul class="days">
         <For each={days()} by={(d) => d.date}>
           {(d, i) => (

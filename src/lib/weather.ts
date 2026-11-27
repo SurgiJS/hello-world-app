@@ -6,39 +6,39 @@ export interface Condition {
 }
 
 const CONDITIONS: Record<number, Condition> = {
-  0: { label: 'Ясно', icon: '☀️' },
-  1: { label: 'Преимущественно ясно', icon: '🌤️' },
-  2: { label: 'Переменная облачность', icon: '⛅' },
-  3: { label: 'Пасмурно', icon: '☁️' },
-  45: { label: 'Туман', icon: '🌫️' },
-  48: { label: 'Изморозь', icon: '🌫️' },
-  51: { label: 'Слабая морось', icon: '🌦️' },
-  53: { label: 'Морось', icon: '🌦️' },
-  55: { label: 'Сильная морось', icon: '🌦️' },
-  56: { label: 'Ледяная морось', icon: '🌧️' },
-  57: { label: 'Сильная ледяная морось', icon: '🌧️' },
-  61: { label: 'Слабый дождь', icon: '🌦️' },
-  63: { label: 'Дождь', icon: '🌧️' },
-  65: { label: 'Сильный дождь', icon: '🌧️' },
-  66: { label: 'Ледяной дождь', icon: '🌧️' },
-  67: { label: 'Сильный ледяной дождь', icon: '🌧️' },
-  71: { label: 'Слабый снег', icon: '🌨️' },
-  73: { label: 'Снег', icon: '🌨️' },
-  75: { label: 'Сильный снег', icon: '❄️' },
-  77: { label: 'Снежные зёрна', icon: '❄️' },
-  80: { label: 'Слабый ливень', icon: '🌦️' },
-  81: { label: 'Ливень', icon: '🌧️' },
-  82: { label: 'Сильный ливень', icon: '⛈️' },
-  85: { label: 'Снегопад', icon: '🌨️' },
-  86: { label: 'Сильный снегопад', icon: '❄️' },
-  95: { label: 'Гроза', icon: '⛈️' },
-  96: { label: 'Гроза с градом', icon: '⛈️' },
-  99: { label: 'Сильная гроза с градом', icon: '⛈️' },
+  0: { label: 'Clear', icon: '☀️' },
+  1: { label: 'Mostly clear', icon: '🌤️' },
+  2: { label: 'Partly cloudy', icon: '⛅' },
+  3: { label: 'Overcast', icon: '☁️' },
+  45: { label: 'Fog', icon: '🌫️' },
+  48: { label: 'Rime fog', icon: '🌫️' },
+  51: { label: 'Light drizzle', icon: '🌦️' },
+  53: { label: 'Drizzle', icon: '🌦️' },
+  55: { label: 'Heavy drizzle', icon: '🌦️' },
+  56: { label: 'Freezing drizzle', icon: '🌧️' },
+  57: { label: 'Heavy freezing drizzle', icon: '🌧️' },
+  61: { label: 'Light rain', icon: '🌦️' },
+  63: { label: 'Rain', icon: '🌧️' },
+  65: { label: 'Heavy rain', icon: '🌧️' },
+  66: { label: 'Freezing rain', icon: '🌧️' },
+  67: { label: 'Heavy freezing rain', icon: '🌧️' },
+  71: { label: 'Light snow', icon: '🌨️' },
+  73: { label: 'Snow', icon: '🌨️' },
+  75: { label: 'Heavy snow', icon: '❄️' },
+  77: { label: 'Snow grains', icon: '❄️' },
+  80: { label: 'Light showers', icon: '🌦️' },
+  81: { label: 'Showers', icon: '🌧️' },
+  82: { label: 'Heavy showers', icon: '⛈️' },
+  85: { label: 'Snow showers', icon: '🌨️' },
+  86: { label: 'Heavy snow showers', icon: '❄️' },
+  95: { label: 'Thunderstorm', icon: '⛈️' },
+  96: { label: 'Thunderstorm with hail', icon: '⛈️' },
+  99: { label: 'Severe thunderstorm with hail', icon: '⛈️' },
 };
 
 export function condition(code: number, isDay = true): Condition {
-  const c = CONDITIONS[code] ?? { label: 'Нет данных', icon: '❔' };
-  return !isDay && code === 0 ? { label: 'Ясная ночь', icon: '🌙' } : c;
+  const c = CONDITIONS[code] ?? { label: 'No data', icon: '❔' };
+  return !isDay && code === 0 ? { label: 'Clear night', icon: '🌙' } : c;
 }
 
 const convert = (celsius: number, units: Units): number =>
@@ -54,27 +54,27 @@ export function formatTemp(celsius: number, units: Units): string {
 }
 
 export function formatWind(kmh: number, units: Units): string {
-  return units === 'imperial' ? `${Math.round(kmh * 0.621371)} миль/ч` : `${Math.round(kmh)} км/ч`;
+  return units === 'imperial' ? `${Math.round(kmh * 0.621371)} mph` : `${Math.round(kmh)} km/h`;
 }
 
 export function formatPrecipitation(mm: number, units: Units): string {
-  return units === 'imperial' ? `${(mm / 25.4).toFixed(2)} дюйм` : `${mm.toFixed(1)} мм`;
+  return units === 'imperial' ? `${(mm / 25.4).toFixed(2)} in` : `${mm.toFixed(1)} mm`;
 }
 
-export function formatPressure(hpa: number): string {
-  return `${Math.round(hpa * 0.750062)} мм рт. ст.`;
+export function formatPressure(hpa: number, units: Units): string {
+  return units === 'imperial' ? `${(hpa * 0.02953).toFixed(2)} inHg` : `${Math.round(hpa)} hPa`;
 }
 
-const COMPASS = ['С', 'СВ', 'В', 'ЮВ', 'Ю', 'ЮЗ', 'З', 'СЗ'];
+const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
 export function compass(degrees: number): string {
-  return COMPASS[Math.round((((degrees % 360) + 360) % 360) / 45) % 8] ?? 'С';
+  return COMPASS[Math.round((((degrees % 360) + 360) % 360) / 45) % 8] ?? 'N';
 }
 
 export function formatDay(date: string, index: number): string {
-  if (index === 0) return 'Сегодня';
-  if (index === 1) return 'Завтра';
-  return new Date(`${date}T12:00:00Z`).toLocaleDateString('ru-RU', {
+  if (index === 0) return 'Today';
+  if (index === 1) return 'Tomorrow';
+  return new Date(`${date}T12:00:00Z`).toLocaleDateString('en-US', {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
@@ -90,11 +90,11 @@ export interface AirLevel {
 }
 
 export function airLevel(aqi: number): AirLevel {
-  if (aqi <= 20) return { label: 'Отлично', tone: 'good' };
-  if (aqi <= 40) return { label: 'Хорошо', tone: 'fair' };
-  if (aqi <= 60) return { label: 'Умеренно', tone: 'moderate' };
-  if (aqi <= 80) return { label: 'Плохо', tone: 'poor' };
-  return { label: 'Очень плохо', tone: 'bad' };
+  if (aqi <= 20) return { label: 'Excellent', tone: 'good' };
+  if (aqi <= 40) return { label: 'Good', tone: 'fair' };
+  if (aqi <= 60) return { label: 'Moderate', tone: 'moderate' };
+  if (aqi <= 80) return { label: 'Poor', tone: 'poor' };
+  return { label: 'Very poor', tone: 'bad' };
 }
 
 export interface ChartPoint {

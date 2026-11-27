@@ -109,7 +109,7 @@ export const HOURS_SHOWN = 24;
 
 export async function searchCities(name: string, signal: AbortSignal, report?: Report): Promise<City[]> {
   const url = new URL(GEO_URL);
-  url.search = new URLSearchParams({ name, count: '6', language: 'ru', format: 'json' }).toString();
+  url.search = new URLSearchParams({ name, count: '6', language: 'en', format: 'json' }).toString();
   const data = await fromResponse<{ results?: GeoResult[] }>(await fetch(url, { signal }), { report });
   return (data?.results ?? []).map((r) => ({
     id: r.id,
