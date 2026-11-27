@@ -11,26 +11,26 @@ export const WeatherApp = () => {
     <div class="shell">
       <header class="top">
         <h1 class="brand">
-          <span aria-hidden="true">⛅</span> Погода
+          <span aria-hidden="true">⛅</span> Weather
         </h1>
         <button
           type="button"
           class="pill"
-          aria-label="Переключить единицы измерения"
+          aria-label="Switch units"
           onClick={() => toggleUnits(store)}
         >
-          {units() === 'metric' ? '°C · км/ч' : '°F · миль/ч'}
+          {units() === 'metric' ? '°C · km/h' : '°F · mph'}
         </button>
       </header>
       <city-search></city-search>
       <city-chips></city-chips>
       <forecast-view></forecast-view>
       <footer class="foot">
-        Данные:{' '}
+        Data:{' '}
         <a href="https://open-meteo.com/" target="_blank" rel="noopener">
           Open-Meteo.com
         </a>{' '}
-        · UI на <a href="https://github.com/SurgiJS/surgijs" target="_blank" rel="noopener">SurgiJS</a>
+        · UI built with <a href="https://github.com/SurgiJS/surgijs" target="_blank" rel="noopener">SurgiJS</a>
       </footer>
     </div>
   );

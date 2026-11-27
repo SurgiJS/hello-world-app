@@ -9,8 +9,8 @@ import type { Units } from './weather';
 
 export const DEFAULT_CITY: City = {
   id: 703448,
-  name: 'Киев',
-  country: 'Украина',
+  name: 'Kyiv',
+  country: 'Ukraine',
   latitude: 50.45466,
   longitude: 30.5238,
   timezone: 'Europe/Kyiv',
@@ -18,11 +18,11 @@ export const DEFAULT_CITY: City = {
 
 export const POPULAR_CITIES: City[] = [
   DEFAULT_CITY,
-  { id: 2950159, name: 'Берлин', country: 'Германия', latitude: 52.52437, longitude: 13.41053, timezone: 'Europe/Berlin' },
-  { id: 2643743, name: 'Лондон', country: 'Великобритания', latitude: 51.50853, longitude: -0.12574, timezone: 'Europe/London' },
-  { id: 5128581, name: 'Нью-Йорк', country: 'США', latitude: 40.71427, longitude: -74.00597, timezone: 'America/New_York' },
-  { id: 1850147, name: 'Токио', country: 'Япония', latitude: 35.6895, longitude: 139.69171, timezone: 'Asia/Tokyo' },
-  { id: 2147714, name: 'Сидней', country: 'Австралия', latitude: -33.86785, longitude: 151.20732, timezone: 'Australia/Sydney' },
+  { id: 2950159, name: 'Berlin', country: 'Germany', latitude: 52.52437, longitude: 13.41053, timezone: 'Europe/Berlin' },
+  { id: 2643743, name: 'London', country: 'United Kingdom', latitude: 51.50853, longitude: -0.12574, timezone: 'Europe/London' },
+  { id: 5128581, name: 'New York', country: 'United States', latitude: 40.71427, longitude: -74.00597, timezone: 'America/New_York' },
+  { id: 1850147, name: 'Tokyo', country: 'Japan', latitude: 35.6895, longitude: 139.69171, timezone: 'Asia/Tokyo' },
+  { id: 2147714, name: 'Sydney', country: 'Australia', latitude: -33.86785, longitude: 151.20732, timezone: 'Australia/Sydney' },
 ];
 
 export const MIN_QUERY = 2;

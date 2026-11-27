@@ -31,7 +31,7 @@ export const CurrentWeather = () => {
               type="button"
               class={isFavorite() ? 'star on' : 'star'}
               aria-pressed={isFavorite() ? 'true' : 'false'}
-              aria-label={isFavorite() ? 'Убрать из избранного' : 'Добавить в избранное'}
+              aria-label={isFavorite() ? 'Remove from favorites' : 'Add to favorites'}
               onClick={() => {
                 const c = city();
                 if (c) toggleFavorite(store, c);
@@ -47,27 +47,27 @@ export const CurrentWeather = () => {
             <span class="temp">{formatTemp(f.current.temperature, units())}</span>
             <div class="summary">
               <strong>{condition(f.current.code, f.current.isDay).label}</strong>
-              <span class="muted">Ощущается как {formatTemp(f.current.feelsLike, units())}</span>
-              <span class="muted">Местное время {timeOf(f.current.time)}</span>
+              <span class="muted">Feels like {formatTemp(f.current.feelsLike, units())}</span>
+              <span class="muted">Local time {timeOf(f.current.time)}</span>
             </div>
           </div>
           <dl class="facts">
             <div>
-              <dt>Ветер</dt>
+              <dt>Wind</dt>
               <dd>
                 {formatWind(f.current.windSpeed, units())}, {compass(f.current.windDirection)}
               </dd>
             </div>
             <div>
-              <dt>Влажность</dt>
+              <dt>Humidity</dt>
               <dd>{f.current.humidity}%</dd>
             </div>
             <div>
-              <dt>Давление</dt>
-              <dd>{formatPressure(f.current.pressure)}</dd>
+              <dt>Pressure</dt>
+              <dd>{formatPressure(f.current.pressure, units())}</dd>
             </div>
             <div>
-              <dt>Осадки</dt>
+              <dt>Precipitation</dt>
               <dd>{formatPrecipitation(f.current.precipitation, units())}</dd>
             </div>
           </dl>

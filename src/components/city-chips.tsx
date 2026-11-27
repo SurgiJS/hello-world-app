@@ -9,8 +9,8 @@ export const CityChips = () => {
   const shown = () => (hasFavorites() ? favorites() : POPULAR_CITIES);
 
   return (
-    <nav class="chips" aria-label={hasFavorites() ? 'Избранные города' : 'Популярные города'}>
-      <span class="chips-title">{hasFavorites() ? '★ Избранное' : 'Популярные'}</span>
+    <nav class="chips" aria-label={hasFavorites() ? 'Favorite cities' : 'Popular cities'}>
+      <span class="chips-title">{hasFavorites() ? '★ Favorites' : 'Popular'}</span>
       <For each={shown()} by={(c) => c.id}>
         {(c) => (
           <button

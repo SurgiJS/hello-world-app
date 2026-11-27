@@ -39,14 +39,14 @@ export const CitySearch = () => {
 
   const locate = () => {
     setLocationError('');
-    if (!navigator.geolocation) return setLocationError('Геолокация недоступна в этом браузере');
+    if (!navigator.geolocation) return setLocationError('Geolocation is not available in this browser');
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         setLocating(false);
         choose({
           id: -Math.abs(Math.round(coords.latitude * 100) * 100_000 + Math.round(coords.longitude * 100)) - 1,
-          name: 'Моё местоположение',
+          name: 'My location',
           country: `${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)}`,
           latitude: coords.latitude,
           longitude: coords.longitude,
@@ -55,7 +55,7 @@ export const CitySearch = () => {
       },
       () => {
         setLocating(false);
-        setLocationError('Не удалось определить местоположение');
+        setLocationError('Could not determine your location');
       },
       { timeout: 8000 },
     );
@@ -67,15 +67,15 @@ export const CitySearch = () => {
         <input
           class="search-input"
           type="search"
-          placeholder="Найти город…"
+          placeholder="Search for a city…"
           autocomplete="off"
-          aria-label="Поиск города"
+          aria-label="City search"
           value={text()}
           onInput={onInput}
           onKeyDown={onKeyDown}
         />
         <button type="button" class="pill" disabled={locating()} onClick={locate}>
-          {locating() ? 'Ищу…' : '📍 Где я'}
+          {locating() ? 'Locating…' : '📍 My location'}
         </button>
       </div>
       <Show when={locationError()}>
@@ -84,13 +84,13 @@ export const CitySearch = () => {
       <Show when={open()}>
         <ul class="results" role="listbox">
           <Show when={cities().status === 'pending' && list().length === 0}>
-            <li class="result muted">Ищу…</li>
+            <li class="result muted">Searching…</li>
           </Show>
           <Show when={cities().status === 'empty'}>
-            <li class="result muted">Ничего не найдено</li>
+            <li class="result muted">No cities found</li>
           </Show>
           <Show when={cities().status === 'err'}>
-            <li class="result muted">Поиск недоступен, попробуйте ещё раз</li>
+            <li class="result muted">Search is unavailable, please try again</li>
           </Show>
           <For each={list()} by={(c) => c.id}>
             {(city) => (
