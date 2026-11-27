@@ -1,10 +1,10 @@
 import { defineComponent, For } from '@surgijs/core';
-import { fromStore } from '../lib/bridge';
+import { fromStore } from '@surgijs/store/core';
 import { POPULAR_CITIES, selectCity, store } from '../lib/store';
 
 export const CityChips = () => {
-  const favorites = fromStore((s) => s.favorites);
-  const city = fromStore((s) => s.city);
+  const favorites = fromStore(store, (s) => s.favorites);
+  const city = fromStore(store, (s) => s.city);
   const hasFavorites = () => favorites().length > 0;
   const shown = () => (hasFavorites() ? favorites() : POPULAR_CITIES);
 

@@ -1,15 +1,11 @@
 import { defineComponent, Match, Switch } from '@surgijs/core';
-import { fromStatus, fromStore } from '../lib/bridge';
+import { fromStatus } from '@surgijs/store/core';
+import { store } from '../lib/store';
 import { airLevel } from '../lib/weather';
 
 export const AirQuality = () => {
-  const city = fromStore((s) => s.city);
-  const air = fromStore((s) => s.air);
-  const status = fromStatus('air');
-  const data = () => {
-    const a = air();
-    return a && a.cityId === city()?.id ? a : null;
-  };
+  const status = fromStatus(store, 'air');
+  const data = () => status().data;
   const level = () => airLevel(data()?.aqi ?? 0);
 
   return (

@@ -43,14 +43,12 @@ export interface DayPoint {
 }
 
 export interface Forecast {
-  cityId: number;
   current: CurrentWeather;
   hourly: HourPoint[];
   daily: DayPoint[];
 }
 
 export interface AirQuality {
-  cityId: number;
   aqi: number;
   pm25: number;
   pm10: number;
@@ -138,7 +136,7 @@ export async function loadForecast(city: City, signal: AbortSignal, report?: Rep
     forecast_days: '7',
   }).toString();
   const data = await fromResponse<ForecastResponse>(await fetch(url, { signal }), { report });
-  return parseForecast(city.id, data);
+  return parseForecast(data);
 }
 
 export async function loadAirQuality(city: City, signal: AbortSignal, report?: Report): Promise<AirQuality | null> {
@@ -151,10 +149,10 @@ export async function loadAirQuality(city: City, signal: AbortSignal, report?: R
   const data = await fromResponse<AirResponse>(await fetch(url, { signal }), { report });
   const c = data?.current;
   if (!c || c.european_aqi == null || c.pm2_5 == null || c.pm10 == null) return null;
-  return { cityId: city.id, aqi: c.european_aqi, pm25: c.pm2_5, pm10: c.pm10 };
+  return { aqi: c.european_aqi, pm25: c.pm2_5, pm10: c.pm10 };
 }
 
-export function parseForecast(cityId: number, d: ForecastResponse): Forecast {
+export function parseForecast(d: ForecastResponse): Forecast {
   const c = d.current;
   const hourPrefix = c.time.slice(0, 13);
   const from = Math.max(0, d.hourly.time.findIndex((t) => t >= hourPrefix));
@@ -181,7 +179,6 @@ export function parseForecast(cityId: number, d: ForecastResponse): Forecast {
     uvIndex: d.daily.uv_index_max[i] ?? 0,
   }));
   return {
-    cityId,
     current: {
       time: c.time,
       temperature: c.temperature_2m,

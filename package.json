@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@surgijs/core": "^0.2.1",
-    "@surgijs/store": "^0.2.0"
+    "@surgijs/core": "^0.3.0",
+    "@surgijs/store": "^1.0.0"
   },
   "devDependencies": {
     "@surgijs/compiler": "^0.2.1",

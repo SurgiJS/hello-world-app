@@ -1,17 +1,14 @@
 import { createMemo, defineComponent, For, Show, useState } from '@surgijs/core';
 import type { City } from '../lib/api';
-import { fromStatus, fromStore } from '../lib/bridge';
+import { fromStatus, fromStore } from '@surgijs/store/core';
 import { MIN_QUERY, selectCity, store } from '../lib/store';
-
-const DEBOUNCE_MS = 250;
 
 export const CitySearch = () => {
   const [text, setText] = useState('');
-  const query = fromStore((s) => s.query);
-  const cities = fromStatus('cities');
+  const query = fromStore(store, (s) => s.query);
+  const cities = fromStatus(store, 'cities');
   const [locating, setLocating] = useState(false);
   const [locationError, setLocationError] = useState('');
-  let timer: ReturnType<typeof setTimeout> | undefined;
 
   const open = createMemo(() => query().trim().length >= MIN_QUERY);
   const list = () => cities().data ?? [];
@@ -19,12 +16,10 @@ export const CitySearch = () => {
   const onInput = (e: Event) => {
     const value = (e.target as HTMLInputElement).value;
     setText(value);
-    clearTimeout(timer);
-    timer = setTimeout(() => store.set('query', value), DEBOUNCE_MS);
+    store.set('query', value);
   };
 
   const reset = () => {
-    clearTimeout(timer);
     setText('');
     store.set('query', '');
   };
@@ -32,7 +27,6 @@ export const CitySearch = () => {
   const choose = (city: City) => {
     selectCity(store, city);
     setText('');
-    clearTimeout(timer);
   };
 
   const onKeyDown = (e: KeyboardEvent) => {

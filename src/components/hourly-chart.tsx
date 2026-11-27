@@ -1,10 +1,11 @@
 import { createMemo, defineComponent, For } from '@surgijs/core';
-import { fromStore } from '../lib/bridge';
+import { fromStore } from '@surgijs/store/core';
+import { store } from '../lib/store';
 import { CHART, chartGeometry, condition, formatTemp, timeOf } from '../lib/weather';
 
 export const HourlyChart = () => {
-  const forecast = fromStore((s) => s.forecast);
-  const units = fromStore((s) => s.units);
+  const forecast = fromStore(store, (s) => s.forecast);
+  const units = fromStore(store, (s) => s.units);
   const hours = () => forecast()?.hourly ?? [];
   const geo = createMemo(() => chartGeometry(hours(), units()));
   const labelled = createMemo(() => {

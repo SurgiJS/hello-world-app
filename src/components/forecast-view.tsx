@@ -1,5 +1,5 @@
 import { createMemo, defineComponent, Match, Show, Switch } from '@surgijs/core';
-import { fromStatus, fromStore } from '../lib/bridge';
+import { fromStatus, fromStore } from '@surgijs/store/core';
 import { store } from '../lib/store';
 import './current-weather';
 import './hourly-chart';
@@ -7,14 +7,9 @@ import './daily-forecast';
 import './air-quality';
 
 export const ForecastView = () => {
-  const city = fromStore((s) => s.city);
-  const forecast = fromStore((s) => s.forecast);
-  const status = fromStatus('forecast');
-
-  const ready = createMemo(() => {
-    const f = forecast();
-    return f != null && f.cityId === city()?.id;
-  });
+  const city = fromStore(store, (s) => s.city);
+  const status = fromStatus(store, 'forecast');
+  const ready = createMemo(() => status().data != null);
   const refresh = () => {
     void store.refetch('forecast');
     void store.refetch('air');

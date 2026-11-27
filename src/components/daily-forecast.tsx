@@ -1,10 +1,11 @@
 import { createMemo, defineComponent, For } from '@surgijs/core';
-import { fromStore } from '../lib/bridge';
+import { fromStore } from '@surgijs/store/core';
+import { store } from '../lib/store';
 import { condition, formatDay, formatPrecipitation, formatTemp } from '../lib/weather';
 
 export const DailyForecast = () => {
-  const forecast = fromStore((s) => s.forecast);
-  const units = fromStore((s) => s.units);
+  const forecast = fromStore(store, (s) => s.forecast);
+  const units = fromStore(store, (s) => s.units);
   const days = () => forecast()?.daily ?? [];
   const range = createMemo(() => {
     const all = days();

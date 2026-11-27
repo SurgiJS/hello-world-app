@@ -7,7 +7,7 @@
 - поиск города (geocoding API), геолокация, избранные города;
 - текущая погода, график на 24 часа, прогноз на 7 дней, качество воздуха;
 - переключение °C / °F, тёмная тема по системным настройкам;
-- состояние (город, избранное, единицы) хранится в `localStorage`.
+- состояние (город, избранное, единицы) хранится в `localStorage` через `persist`.
 
 ## Как устроено
 
@@ -19,7 +19,7 @@
 | `cities` | `remote` | `query` |
 | `forecast`, `air` | `remote` | `city` |
 
-Компоненты (`src/components`) это Web Components на JSX, которые читают store через небольшой мост в сигналы (`src/lib/bridge.ts`).
+Компоненты (`src/components`) это Web Components на JSX, которые читают store через `fromStore` / `fromStatus` из `@surgijs/store/core`. Типизированные `deps` дает `createRemote`, дебаунс поиска задан в `remote({ debounce })`, сохранение в `localStorage` делает `persist`.
 
 ## Разработка
 

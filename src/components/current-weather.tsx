@@ -1,5 +1,5 @@
 import { defineComponent, Show } from '@surgijs/core';
-import { fromStore } from '../lib/bridge';
+import { fromStore } from '@surgijs/store/core';
 import { store, toggleFavorite } from '../lib/store';
 import {
   compass,
@@ -12,10 +12,10 @@ import {
 } from '../lib/weather';
 
 export const CurrentWeather = () => {
-  const forecast = fromStore((s) => s.forecast);
-  const city = fromStore((s) => s.city);
-  const units = fromStore((s) => s.units);
-  const favorites = fromStore((s) => s.favorites);
+  const forecast = fromStore(store, (s) => s.forecast);
+  const city = fromStore(store, (s) => s.city);
+  const units = fromStore(store, (s) => s.units);
+  const favorites = fromStore(store, (s) => s.favorites);
   const isFavorite = () => favorites().some((f) => f.id === city()?.id);
 
   return (

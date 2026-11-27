@@ -1,12 +1,12 @@
 import { defineComponent } from '@surgijs/core';
-import { fromStore } from '../lib/bridge';
+import { fromStore } from '@surgijs/store/core';
 import { toggleUnits, store } from '../lib/store';
 import './city-search';
 import './city-chips';
 import './forecast-view';
 
 export const WeatherApp = () => {
-  const units = fromStore((s) => s.units);
+  const units = fromStore(store, (s) => s.units);
   return (
     <div class="shell">
       <header class="top">

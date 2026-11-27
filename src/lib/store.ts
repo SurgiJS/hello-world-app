@@ -1,13 +1,10 @@
-import { action, createStore, remote, type Get } from '@surgijs/store';
+import { action, createRemote, createStore, persist, type Get } from '@surgijs/store';
 import {
   loadAirQuality,
   loadForecast,
   searchCities,
-  type AirQuality,
   type City,
-  type Forecast,
 } from './api';
-import { load, save } from './storage';
 import type { Units } from './weather';
 
 export const DEFAULT_CITY: City = {
@@ -30,50 +27,47 @@ export const POPULAR_CITIES: City[] = [
 
 export const MIN_QUERY = 2;
 
+interface State {
+  query: string;
+  city: City | null;
+  favorites: City[];
+  units: Units;
+}
+
 export function createWeatherStore(retryDelay = 1000) {
-  const retry = { retry: 1, retryDelay };
+  const remote = createRemote<State>();
+
   const store = createStore(
     {
       query: '',
-      city: load<City | null>('city', DEFAULT_CITY),
-      favorites: load<City[]>('favorites', []),
-      units: load<Units>('units', 'metric'),
+      city: DEFAULT_CITY as City | null,
+      favorites: [] as City[],
+      units: 'metric' as Units,
 
-      cities: remote<City[]>({
-        deps: (get) => (get('query') as string).trim(),
+      cities: remote({
+        deps: (get) => get.query.trim(),
+        debounce: 250,
         staleTime: 10 * 60_000,
-        ...retry,
-        fetch: async (_get, { deps, signal, report }) => {
-          const q = deps as string;
-          return q.length < MIN_QUERY ? [] : searchCities(q, signal, report);
-        },
+        fetch: async (_get, { deps: q, signal, report }) =>
+          q.length < MIN_QUERY ? [] : searchCities(q, signal, report),
       }),
 
-      forecast: remote<Forecast | null>({
-        deps: (get) => get('city') as City | null,
+      forecast: remote({
+        deps: (get) => get.city,
         staleTime: 5 * 60_000,
-        ...retry,
-        fetch: async (_get, { deps, signal, report }) => {
-          const city = deps as City | null;
-          return city ? loadForecast(city, signal, report) : null;
-        },
+        fetch: async (_get, { deps: city, signal, report }) => (city ? loadForecast(city, signal, report) : null),
       }),
 
-      air: remote<AirQuality | null>({
-        deps: (get) => get('city') as City | null,
+      air: remote({
+        deps: (get) => get.city,
         staleTime: 10 * 60_000,
-        ...retry,
-        fetch: async (_get, { deps, signal, report }) => {
-          const city = deps as City | null;
-          return city ? loadAirQuality(city, signal, report) : null;
-        },
+        fetch: async (_get, { deps: city, signal, report }) => (city ? loadAirQuality(city, signal, report) : null),
       }),
     },
+    { retry: 1, retryDelay },
   );
 
-  store.subscribe((s) => s.city, (city) => save('city', city));
-  store.subscribe((s) => s.favorites, (list) => save('favorites', list));
-  store.subscribe((s) => s.units, (units) => save('units', units));
+  persist(store, { name: 'surgi-weather', keys: ['city', 'favorites', 'units'] });
 
   return store;
 }

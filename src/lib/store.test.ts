@@ -37,8 +37,7 @@ const rawForecast = {
 
 describe('parseForecast', () => {
   it('starts at the current hour and marks night hours', () => {
-    const f = parseForecast(7, rawForecast);
-    expect(f.cityId).toBe(7);
+    const f = parseForecast(rawForecast);
     expect(f.hourly.map((h) => h.time.slice(11))).toEqual(['10:00', '11:00', '17:00', '18:00']);
     expect(f.hourly[0]!.precipitationProbability).toBe(0);
     expect(f.hourly.map((h) => h.isDay)).toEqual([true, true, false, false]);
@@ -63,24 +62,28 @@ describe('weather store', () => {
             : json({ results: [{ id: 1, name: 'Берлин', admin1: 'Берлин', country: 'Германия', latitude: 52.5, longitude: 13.4 }] });
         }
         if (url.hostname.startsWith('air-quality')) return json({ current: { european_aqi: 10, pm2_5: 1, pm10: 2 } });
-        return json(rawForecast);
+        const lat = Number(url.searchParams.get('latitude'));
+        return json({ ...rawForecast, current: { ...rawForecast.current, temperature_2m: lat } });
       }),
     );
   });
 
   afterEach(() => vi.unstubAllGlobals());
 
-  const settle = () => new Promise((r) => setTimeout(r, 10));
+  const settle = (ms = 10) => new Promise((r) => setTimeout(r, ms));
+  const DEBOUNCE = 300;
 
   it('loads the forecast for the selected city and refetches when it changes', async () => {
     const store = createWeatherStore();
     const stop = store.subscribe((s) => s.forecast, () => {});
     await settle();
-    expect(store.get((s) => s.forecast)?.cityId).toBe(DEFAULT_CITY.id);
+    expect(store.get((s) => s.forecast)?.current.temperature).toBe(DEFAULT_CITY.latitude);
 
     store.set('city', POPULAR_CITIES[1]!);
+    expect(store.status('forecast').isPending).toBe(true);
+    expect(store.get((s) => s.forecast)).toBeUndefined();
     await settle();
-    expect(store.get((s) => s.forecast)?.cityId).toBe(POPULAR_CITIES[1]!.id);
+    expect(store.get((s) => s.forecast)?.current.temperature).toBe(POPULAR_CITIES[1]!.latitude);
     expect(calls.filter((u) => u.hostname === 'api.open-meteo.com')).toHaveLength(2);
     stop();
   });
@@ -103,16 +106,28 @@ describe('weather store', () => {
     expect(calls.filter((u) => u.hostname.startsWith('geocoding'))).toHaveLength(0);
 
     store.set('query', 'zzz');
-    await settle();
+    await settle(DEBOUNCE);
     expect(store.status('cities').status).toBe('empty');
 
     store.set('query', 'берлин');
-    await settle();
+    await settle(DEBOUNCE);
     expect(store.get((s) => s.cities)?.[0]).toMatchObject({ name: 'Берлин', region: undefined });
     stop();
   });
 
-  it('keeps stale data and flags the error when a refetch fails', async () => {
+  it('waits for typing to pause before searching', async () => {
+    const store = createWeatherStore();
+    const stop = store.subscribe((s) => s.cities, () => {});
+    await settle();
+    for (const q of ['be', 'ber', 'berl']) store.set('query', q);
+    await settle(DEBOUNCE);
+    const searches = calls.filter((u) => u.hostname.startsWith('geocoding'));
+    expect(searches).toHaveLength(1);
+    expect(searches[0]!.searchParams.get('name')).toBe('berl');
+    stop();
+  });
+
+  it('flags an error instead of showing the previous city when the next load fails', async () => {
     const store = createWeatherStore(0);
     const stop = store.subscribe((s) => s.forecast, () => {});
     await settle();
@@ -120,7 +135,7 @@ describe('weather store', () => {
     store.set('city', POPULAR_CITIES[2]!);
     await vi.waitFor(() => expect(store.status('forecast').isError).toBe(true), { timeout: 3000 });
     expect(store.status('forecast').httpStatus).toBe(500);
-    expect(store.get((s) => s.forecast)?.cityId).toBe(DEFAULT_CITY.id);
+    expect(store.get((s) => s.forecast)).toBeUndefined();
     stop();
   });
 });
